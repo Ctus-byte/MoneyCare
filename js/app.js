@@ -9,7 +9,9 @@ import {
 import { renderChart } from "./chart.js";
 import { showToast } from "./toast.js";
 import { exportToCSV } from "./export.js";
-import { analyzeTransactions } from "./ai.js";
+import {
+  chatWithFinanceAI
+} from "./ai.js";
 import { renderBudget } from "./budget.js";
 import {
   renderWeeklyChart
@@ -53,8 +55,6 @@ const filterButtons = document.querySelectorAll(".filter-btn");
 const searchInput = document.getElementById("search-input");
 const monthFilter = document.getElementById("month-filter");
 const clearMonthBtn = document.getElementById("clear-month-btn");
-const analyzeBtn = document.getElementById("analyze-btn");
-const aiResult = document.getElementById("ai-result");
 
 let currentMonth = "";
 
