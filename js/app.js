@@ -516,3 +516,39 @@ if (aiInput && sendAiBtn && aiChatBox) {
   );
 
 }
+window.addEventListener("DOMContentLoaded", function () {
+  const aiInput = document.getElementById("ai-input");
+  const sendAiBtn = document.getElementById("send-ai-btn");
+  const aiChatBox = document.getElementById("ai-chat-box");
+
+  if (!aiInput || !sendAiBtn || !aiChatBox) {
+    console.log("Không tìm thấy AI elements");
+    return;
+  }
+
+  console.log("AI chat ready");
+
+  sendAiBtn.onclick = async function () {
+    console.log("Đã bấm nút AI");
+
+    const question = aiInput.value.trim();
+
+    if (!question) return;
+
+    const userMsg = document.createElement("div");
+    userMsg.className = "ai-message user";
+    userMsg.textContent = question;
+    aiChatBox.appendChild(userMsg);
+
+    aiInput.value = "";
+
+    const loadingMsg = document.createElement("div");
+    loadingMsg.className = "ai-message ai";
+    loadingMsg.textContent = "⏳ AI đang suy nghĩ...";
+    aiChatBox.appendChild(loadingMsg);
+
+    const reply = await chatWithFinanceAI(question, transactions);
+
+    loadingMsg.innerHTML = reply.replace(/\n/g, "<br>");
+  };
+});
