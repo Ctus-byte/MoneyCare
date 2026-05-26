@@ -64,6 +64,8 @@ ${JSON.stringify(transactions, null, 2)}
 
     const data = await response.json();
 
+    console.log("Gemini response:", JSON.stringify(data, null, 2));
+
     const text =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
       "AI chưa tạo được phân tích. Vui lòng thử lại.";
@@ -136,6 +138,8 @@ ${message}
     );
 
     const data = await response.json();
+
+    console.log("Gemini response:", JSON.stringify(data, null, 2));
 
     const text =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
