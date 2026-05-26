@@ -1,11 +1,8 @@
 const AI_SERVER_URL =
   "https://moneycare-u35o.onrender.com";
 
-  import {
-  chatWithFinanceAI
-} from "./ai.js";
-
 export async function analyzeTransactions(transactions) {
+
   const currentUser = JSON.parse(
     localStorage.getItem("moneycare_current_user")
   );
@@ -54,6 +51,7 @@ export async function chatWithFinanceAI(
   message,
   transactions
 ) {
+
   const currentUser = JSON.parse(
     localStorage.getItem("moneycare_current_user")
   );
