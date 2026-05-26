@@ -1,0 +1,44 @@
+form {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+
+  padding: 22px;
+  border-radius: 24px;
+
+  display: grid;
+  grid-template-columns:
+  repeat(2, minmax(0, 1fr));
+  gap: 14px;
+
+  box-shadow: 0 14px 34px rgba(15,23,42,0.07);
+  border: 1px solid rgba(255,255,255,0.7);
+}
+form {
+  width: 100%;
+}
+
+form input,
+form select,
+form button {
+  min-width: 0;
+}
+
+form input,
+form select {
+  width: 100%;
+}
+
+form button {
+  grid-column: span 2;
+}
+
+.left-panel {
+  min-width: 380px;
+}
+
+form:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 20px 40px rgba(59,130,246,0.12);
+}

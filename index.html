@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoneyCare</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/summary.css">
+  <link rel="stylesheet" href="css/form.css">
+  <link rel="stylesheet" href="css/transaction.css">
+  <link rel="stylesheet" href="css/filter.css">
+  <link rel="stylesheet" href="css/chart.css">
+  <link rel="stylesheet" href="css/month.css">
+  <link rel="stylesheet" href="css/toast.css">
+  <link rel="stylesheet" href="css/ai.css">
+  <link rel="stylesheet" href="css/budget.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+</head>
+
+<body>
+
+  <div class="app-layout">
+
+    <div class="sidebar">
+      <div class="logo">MoneyCare</div>
+
+      <button class="nav-btn active" data-section="overview">📊 Tổng quan</button>
+      <button class="nav-btn" data-section="transactions">💳 Giao dịch</button>
+      <button class="nav-btn" data-section="statistics">📈 Thống kê</button>
+      <button class="nav-btn" data-section="ai">🤖 AI tài chính</button>
+      <button class="nav-btn" data-section="budget">🎯 Ngân sách</button>
+      <button class="nav-btn" data-section="settings">⚙️ Cài đặt</button>
+      <button id="logout-btn" class="nav-btn">🚪 Đăng xuất</button>
+    </div>
+
+    <div class="main-content">
+
+      <div class="top-bar">
+        <button id="mobile-menu-btn" class="mobile-menu-btn">
+          ☰ Menu
+        </button>
+        <div>
+          <h1>MoneyCare</h1>
+          <p class="subtitle">Quản lý tài chính cá nhân thông minh</p>
+        </div>
+
+        <div class="top-actions">
+          <button id="theme-toggle">🌙 Dark Mode</button>
+          <button id="export-btn">Xuất Excel</button>
+        </div>
+      </div>
+
+      <div id="overview" class="page-section">
+
+        <div class="summary">
+
+          <div class="summary-card income-card">
+            <div class="summary-top">
+              <h3>Tổng thu</h3>
+              <span class="summary-icon">💰</span>
+            </div>
+            <p id="total-income">0đ</p>
+          </div>
+
+          <div class="summary-card expense-card">
+            <div class="summary-top">
+              <h3>Tổng chi</h3>
+              <span class="summary-icon">💸</span>
+            </div>
+            <p id="total-expense">0đ</p>
+          </div>
+
+          <div class="summary-card balance-card">
+            <div class="summary-top">
+              <h3>Số dư</h3>
+              <span class="summary-icon">💳</span>
+            </div>
+            <p id="balance">0đ</p>
+          </div>
+
+        </div>
+
+        <div class="chart-title">
+          📊 Phân tích chi tiêu
+        </div>
+
+        <div class="chart-container">
+          <canvas id="expense-chart"></canvas>
+        </div>
+
+      </div>
+
+      <div id="transactions" class="page-section hidden">
+
+        <div class="dashboard-grid">
+
+          <div class="left-panel">
+
+            <h2>Thêm giao dịch</h2>
+
+            <form id="transaction-form">
+              <input type="text" id="name" placeholder="Tên giao dịch" required>
+              <input type="number" id="amount" placeholder="Số tiền" required>
+
+              <select id="type">
+                <option value="income">Thu nhập</option>
+                <option value="expense">Chi tiêu</option>
+              </select>
+
+              <select id="category">
+                <option value="Ăn uống">Ăn uống</option>
+                <option value="Nhà ở">Nhà ở</option>
+                <option value="Di chuyển">Di chuyển</option>
+                <option value="Học tập">Học tập</option>
+                <option value="Giải trí">Giải trí</option>
+                <option value="Khác">Khác</option>
+              </select>
+
+              <input type="date" id="date" required>
+
+              <button type="submit">Thêm</button>
+            </form>
+
+            <button id="reset-btn">Xóa toàn bộ dữ liệu</button>
+
+            <div class="month-box">
+              <label for="month-filter">Chọn tháng:</label>
+              <input type="month" id="month-filter">
+              <button id="clear-month-btn">Xem tất cả</button>
+            </div>
+
+            <input type="text" id="search-input" placeholder="Tìm giao dịch...">
+
+            <div class="filter-box">
+              <button class="filter-btn" data-filter="all">Tất cả</button>
+              <button class="filter-btn" data-filter="income">Thu nhập</button>
+              <button class="filter-btn" data-filter="expense">Chi tiêu</button>
+            </div>
+
+          </div>
+
+          <div class="right-panel">
+            <h2>Danh sách giao dịch</h2>
+            <ul id="transaction-list"></ul>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div id="statistics" class="page-section hidden">
+
+      <div class="stats-section">
+
+
+        <div class="stats-card">
+          <h3>📈 Chi tiêu 7 ngày gần nhất</h3>
+
+          <div class="chart-scroll">
+            <canvas id="weekly-chart"></canvas>
+          </div>
+        </div>
+
+        <div class="stats-card monthly-card">
+          <h3>📊 Tổng thu và tổng chi</h3>
+
+          <div class="chart-scroll">
+            <canvas id="monthly-chart"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+      <div id="ai" class="page-section hidden">
+
+        <div class="ai-box">
+
+          <div class="ai-header">🤖 AI Financial Insight</div>
+
+          <p class="ai-subtitle">
+            Phân tích nhanh thói quen chi tiêu và đề xuất tối ưu tài chính.
+          </p>
+
+          <button id="analyze-btn">
+            Phân tích ngay
+          </button>
+
+          <div id="ai-result">
+            <div class="ai-card">
+              Nhấn “Phân tích ngay” để AI đánh giá tình hình tài chính của bạn.
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div id="budget" class="page-section hidden">
+
+        <div class="budget-box">
+
+          <div class="budget-header">
+            🎯 Quản lý ngân sách
+          </div>
+
+          <div class="budget-form">
+            <input
+              type="number"
+              id="budget-input"
+              placeholder="Nhập ngân sách tháng"
+            >
+
+            <button id="save-budget-btn">
+              Lưu ngân sách
+            </button>
+          </div>
+
+          <div class="budget-info">
+
+            <div>
+              <span>Ngân sách:</span>
+              <strong id="budget-total">0đ</strong>
+            </div>
+
+            <div>
+              <span>Đã chi:</span>
+              <strong id="budget-used">0đ</strong>
+            </div>
+
+            <div>
+              <span>Còn lại:</span>
+              <strong id="budget-left">0đ</strong>
+            </div>
+
+          </div>
+
+          <div id="budget-percent">
+            Đã sử dụng 0%
+          </div>
+
+          <div class="budget-progress">
+            <div id="budget-bar"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div id="settings" class="page-section hidden">
+        <div class="settings-box">
+          <h2>Cài đặt</h2>
+          <p>Chức năng đang phát triển...</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>

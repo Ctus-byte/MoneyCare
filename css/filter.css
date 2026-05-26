@@ -1,0 +1,35 @@
+.filter-box {
+  display: flex;
+  gap: 12px;
+
+  margin-bottom: 20px;
+
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  background: white;
+
+  color: #0f172a;
+
+  border: 1px solid #dbeafe;
+
+  padding: 12px 18px;
+
+  border-radius: 14px;
+
+  transition: 0.2s;
+}
+
+.filter-btn:hover {
+  transform: translateY(-1px);
+}
+
+.filter-btn.active {
+  background:
+    linear-gradient(135deg, #2563eb, #1d4ed8);
+
+  color: white;
+
+  border: none;
+}
