@@ -292,24 +292,7 @@ exportBtn.addEventListener("click", function () {
   showToast("Đã xuất file Excel");
 
 });
-analyzeBtn.addEventListener("click", function () {
 
-  aiResult.innerHTML = `
-    <div class="ai-loading">
-      🤖 AI đang phân tích dữ liệu...
-    </div>
-  `;
-
-  setTimeout(function () {
-
-    const result =
-      analyzeTransactions(transactions);
-
-    aiResult.innerHTML = result;
-
-  }, 1500);
-
-});
 const saveBudgetBtn =
   document.getElementById(
     "save-budget-btn"
@@ -456,6 +439,78 @@ if (
       sidebar.classList.toggle(
         "mobile-hidden"
       );
+
+    }
+  );
+
+}
+const aiInput =
+  document.getElementById("ai-input");
+
+const sendAiBtn =
+  document.getElementById("send-ai-btn");
+
+const aiChatBox =
+  document.getElementById("ai-chat-box");
+
+function addAIMessage(text, type) {
+  const div =
+    document.createElement("div");
+
+  div.className =
+    "ai-message " + type;
+
+  div.innerHTML =
+    text.replace(/\n/g, "<br>");
+
+  aiChatBox.appendChild(div);
+
+  aiChatBox.scrollTop =
+    aiChatBox.scrollHeight;
+}
+
+if (aiInput && sendAiBtn && aiChatBox) {
+
+  sendAiBtn.addEventListener(
+    "click",
+    async function () {
+
+      const question =
+        aiInput.value.trim();
+
+      if (!question) return;
+
+      addAIMessage(question, "user");
+
+      aiInput.value = "";
+
+      addAIMessage(
+        "⏳ AI đang suy nghĩ...",
+        "ai"
+      );
+
+      const loadingMessage =
+        aiChatBox.lastChild;
+
+      const reply =
+        await chatWithFinanceAI(
+          question,
+          transactions
+        );
+
+      loadingMessage.innerHTML =
+        reply.replace(/\n/g, "<br>");
+
+    }
+  );
+
+  aiInput.addEventListener(
+    "keydown",
+    function (e) {
+
+      if (e.key === "Enter") {
+        sendAiBtn.click();
+      }
 
     }
   );
