@@ -7,6 +7,42 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+async function callOpenRouter(prompt) {
+  const response = await fetch(
+    "https://openrouter.ai/api/v1/chat/completions",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          "Bearer " + process.env.OPENROUTER_API_KEY
+      },
+
+      body: JSON.stringify({
+        model: "meta-llama/llama-3-8b-instruct:free",
+
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ]
+      })
+    }
+  );
+
+  const data = await response.json();
+
+  console.log("OpenRouter response:");
+  console.log(JSON.stringify(data, null, 2));
+
+  return (
+    data?.choices?.[0]?.message?.content ||
+    "AI chưa trả lời được. Vui lòng thử lại."
+  );
+}
+
 app.post("/analyze-finance", async function (req, res) {
   try {
     const transactions = req.body.transactions || [];
@@ -40,36 +76,7 @@ Dữ liệu giao dịch:
 ${JSON.stringify(transactions, null, 2)}
 `;
 
-    const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=" +
-        process.env.GEMINI_API_KEY,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: prompt
-                }
-              ]
-            }
-          ]
-        })
-      }
-    );
-
-    const data = await response.json();
-
-    console.log("Gemini response:", JSON.stringify(data, null, 2));
-    console.log("FULL GEMINI ERROR:");
-
-    const text =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "AI chưa tạo được phân tích. Vui lòng thử lại.";
+    const text = await callOpenRouter(prompt);
 
     res.json({
       result: text
@@ -116,51 +123,7 @@ Câu hỏi của người dùng:
 ${message}
 `;
 
-    const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=" +
-        process.env.GEMINI_API_KEY,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: prompt
-                }
-              ]
-            }
-          ]
-        })
-      }
-    );
-
-    const data = await response.json();
-
-    console.log("Gemini response:", JSON.stringify(data, null, 2));
-
-    let text = "AI chưa trả lời được.";
-
-if (
-  data &&
-  data.candidates &&
-  data.candidates[0] &&
-  data.candidates[0].content &&
-  data.candidates[0].content.parts &&
-  data.candidates[0].content.parts[0]
-) {
-  text = data.candidates[0].content.parts[0].text;
-} else {
-
-  console.log("FULL GEMINI ERROR:");
-  console.log(JSON.stringify(data, null, 2));
-
-  text =
-    "AI đang gặp lỗi xử lý dữ liệu. Vui lòng thử lại.";
-}
+    const text = await callOpenRouter(prompt);
 
     res.json({
       reply: text
