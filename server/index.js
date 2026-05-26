@@ -80,6 +80,79 @@ ${JSON.stringify(transactions, null, 2)}
   }
 });
 
+app.post("/chat-finance", async function (req, res) {
+  try {
+    const message = req.body.message || "";
+    const transactions = req.body.transactions || [];
+    const budget = req.body.budget || 0;
+
+    if (!message.trim()) {
+      return res.status(400).json({
+        error: "Message is required"
+      });
+    }
+
+    const prompt = `
+Bạn là AI trợ lý tài chính cá nhân trong ứng dụng MoneyCare.
+
+Nhiệm vụ:
+- Trả lời như một trợ lý thân thiện.
+- Dùng tiếng Việt đơn giản, dễ hiểu.
+- Chỉ tư vấn tài chính cá nhân, chi tiêu, tiết kiệm, ngân sách.
+- Nếu câu hỏi không liên quan tài chính, nhẹ nhàng kéo về chủ đề tài chính.
+- Dựa vào dữ liệu giao dịch nếu có.
+- Không bịa số liệu ngoài dữ liệu được cung cấp.
+- Trả lời ngắn gọn, rõ ràng.
+
+Ngân sách tháng: ${budget} VND
+
+Dữ liệu giao dịch:
+${JSON.stringify(transactions, null, 2)}
+
+Câu hỏi của người dùng:
+${message}
+`;
+
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" +
+        process.env.GEMINI_API_KEY,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: prompt
+                }
+              ]
+            }
+          ]
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    const text =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "Mình chưa trả lời được câu này. Bạn thử hỏi lại ngắn gọn hơn nha.";
+
+    res.json({
+      reply: text
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: "AI chat error"
+    });
+  }
+});
+
 app.get("/", function (req, res) {
   res.send("MoneyCare AI Server is running");
 });
