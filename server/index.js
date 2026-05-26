@@ -141,9 +141,25 @@ ${message}
 
     console.log("Gemini response:", JSON.stringify(data, null, 2));
 
-    const text =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "Mình chưa trả lời được câu này. Bạn thử hỏi lại ngắn gọn hơn nha.";
+    let text = "AI chưa trả lời được.";
+
+if (
+  data &&
+  data.candidates &&
+  data.candidates[0] &&
+  data.candidates[0].content &&
+  data.candidates[0].content.parts &&
+  data.candidates[0].content.parts[0]
+) {
+  text = data.candidates[0].content.parts[0].text;
+} else {
+
+  console.log("FULL GEMINI ERROR:");
+  console.log(JSON.stringify(data, null, 2));
+
+  text =
+    "AI đang gặp lỗi xử lý dữ liệu. Vui lòng thử lại.";
+}
 
     res.json({
       reply: text
